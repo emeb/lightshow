@@ -5,7 +5,7 @@
 
 #include "adc.h"
 
-uint16_t adc_buffer[3];
+uint16_t adc_buffer[4];
 
 void adc_init(void)
 {
@@ -21,7 +21,7 @@ void adc_init(void)
 	DMA_InitStructure.DMA_PeripheralBaseAddr = (uint32_t *)(&ADC1->DR);
 	DMA_InitStructure.DMA_MemoryBaseAddr = (uint32_t)adc_buffer;
 	DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralSRC;
-	DMA_InitStructure.DMA_BufferSize = 3;
+	DMA_InitStructure.DMA_BufferSize = 4;
 	DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
 	DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;
 	DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_HalfWord;
@@ -40,7 +40,7 @@ void adc_init(void)
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1, ENABLE);
 
 	/* Configure ADC Channel1,2,3 as analog inputs */
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0|GPIO_Pin_1|GPIO_Pin_2 ;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0|GPIO_Pin_1|GPIO_Pin_2|GPIO_Pin_3 ;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AN;
 	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL ;
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
@@ -63,6 +63,7 @@ void adc_init(void)
 	ADC_ChannelConfig(ADC1, ADC_Channel_0 , ADC_SampleTime_239_5Cycles);
 	ADC_ChannelConfig(ADC1, ADC_Channel_1 , ADC_SampleTime_239_5Cycles);
 	ADC_ChannelConfig(ADC1, ADC_Channel_2 , ADC_SampleTime_239_5Cycles);
+	ADC_ChannelConfig(ADC1, ADC_Channel_3 , ADC_SampleTime_239_5Cycles);
 
 	/* ADC Calibration */
 	ADC_GetCalibrationFactor(ADC1);
