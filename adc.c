@@ -5,13 +5,20 @@
 
 #include "adc.h"
 
-uint16_t adc_buffer[4];
+uint16_t adc_buffer[4], adc_prev_buffer[4];
 
 void adc_init(void)
 {
 	ADC_InitTypeDef     ADC_InitStructure;
 	GPIO_InitTypeDef    GPIO_InitStructure;
 	DMA_InitTypeDef   DMA_InitStructure;
+	uint8_t i;
+	
+	/* clear buffers */
+	for(i=0;i<4;i++)
+	{
+		adc_buffer[i] = adc_prev_buffer[i] = 0;
+	}
 	
 	/* DMA1 clock enable */
 	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1 , ENABLE);
@@ -82,6 +89,36 @@ void adc_init(void)
 
 	/* ADC1 regular Software Start Conv */ 
 	ADC_StartOfConversion(ADC1);
+}
+
+/*
+ * check if adc values have changed by more than hyst
+ */
+uint8_t adc_hyst(uint16_t hyst)
+{
+	uint8_t i, result = 0;
+	int16_t diff;
+	
+	for(i=0;i<4;i++)
+	{
+		/* get abs val of difference from last */
+		diff = (int16_t)adc_buffer[i]-(int16_t)adc_prev_buffer[i];
+		diff = diff < 0 ? -diff : diff;
+		
+		/* check if exceeded */
+		if(diff > hyst)
+			result = 1;
+		
+	}
+	
+	/* only update all if one or more exceeded */
+	if(result)
+	{
+		for(i=0;i<4;i++)
+			adc_prev_buffer[i] = adc_buffer[i];
+	}
+	
+	return result;
 }
 
 /*

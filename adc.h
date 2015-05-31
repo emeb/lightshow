@@ -8,6 +8,7 @@
 #include "stm32f0xx.h"
 
 void adc_init(void);
+uint8_t adc_hyst(uint16_t hyst);
 uint16_t adc_get_data(uint8_t index);
 
 #endif

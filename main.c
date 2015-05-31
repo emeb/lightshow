@@ -38,7 +38,7 @@ void shift5(uint8_t shift, uint8_t *out_array)
 /* main */
 int main(void)
 {
-	uint8_t algo, bright, speed, ldr, temp;
+	uint8_t algo=1, bright=255, speed=4, ldr=0, temp;
 	uint8_t hsv[3], rgb_temp[3], shift_array[5];
 	uint8_t shift, i, j;
 	uint8_t code, power_state = 1;
@@ -58,11 +58,54 @@ int main(void)
 	/* Loop waiting for button push to speak */
 	while(1)
 	{
-		/* get pot parameters */
-		algo = (adc_get_data(0)>>9)&7;	// for 8 modes
-		bright = adc_get_data(1)>>4;
-		speed = 1+(64/(64-(adc_get_data(2)>>6)));	// linearizes speed
-		ldr = adc_get_data(3)>>4;
+		/* get pot parameters if they changed */
+		if(adc_hyst(8))
+		{
+			algo = (adc_get_data(0)>>9)&7;	// for 8 modes
+			bright = adc_get_data(1)>>4;
+			speed = 1+(64/(64-(adc_get_data(2)>>6)));	// linearizes speed
+			ldr = adc_get_data(3)>>4;
+		}
+		
+		/* check IR */
+		if((code = ir_check_key()))
+		{
+			switch(code)
+			{
+				case IR_RM_PWR:
+					power_state = 1-power_state;
+					break;
+				
+				case IR_RM_VOLUP:
+					bright++;
+					break;
+				
+				case IR_RM_CHUP:
+					speed++;
+					speed = (speed == 65) ? 64 : speed;
+					break;
+				
+				case IR_RM_VOLDN:
+					bright--;			
+					break;
+				
+				case IR_RM_CHDN:
+					speed--;
+					speed = (speed == 0) ? 1 : speed;
+				break;
+					
+				case IR_RM_1: algo = 1; break;
+				case IR_RM_2: algo = 2; break;
+				case IR_RM_3: algo = 3; break;
+				case IR_RM_4: algo = 4; break;
+				case IR_RM_5: algo = 5; break;
+				case IR_RM_6: algo = 6; break;
+				case IR_RM_7: algo = 7; break;
+				case IR_RM_8: algo = 0; break;
+				case IR_RM_9: algo = 1; break;
+				case IR_RM_0: algo = 0; break;
+			}
+		}
 		
 		/* compute new colors by algorithm */
 		switch(algo)
@@ -154,14 +197,6 @@ int main(void)
 				}
 				shift++;
 				break;
-		}
-		
-		/* check IR */
-		if((code = ir_check_key()))
-		{
-			/* toggle power state */
-			if(code == IR_RM_PWR)
-				power_state = 1-power_state;
 		}
 		
 		if(power_state)
