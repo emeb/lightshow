@@ -7,6 +7,7 @@
 #include "adc.h"
 #include "systick.h"
 #include "ws281x.h"
+#include "ir.h"
 
 /* WS281x RGB buffer */
 uint8_t rgb_data[3*WS_MAX_LEDS];
@@ -40,11 +41,13 @@ int main(void)
 	uint8_t algo, bright, speed, ldr, temp;
 	uint8_t hsv[3], rgb_temp[3], shift_array[5];
 	uint8_t shift, i, j;
+	uint8_t code, power_state = 1;
 	
 	/* initialize the hardware */
 	systick_init();
 	adc_init();
 	ws281x_init();
+	ir_init();
 	
 	/* init the local state */
 	hsv[0] = 0;
@@ -153,9 +156,27 @@ int main(void)
 				break;
 		}
 		
-		/* send new colors to to the LED chain */
-		ws281x_send(rgb_data, 5);
-
+		/* check IR */
+		if((code = ir_check_key()))
+		{
+			/* toggle power state */
+			if(code == IR_RM_PWR)
+				power_state = 1-power_state;
+		}
+		
+		if(power_state)
+		{
+			/* send new colors to to the LED chain */
+			ws281x_send(rgb_data, 5);
+		}
+		else
+		{
+			/* send all off */
+			for(i=0;i<15;i++)
+				rgb_data[i] = 0;
+			ws281x_send(rgb_data, 5);
+		}
+		
 		/* wait a bit depending on speed setting */
 		systick_delayms(speed);
 	}

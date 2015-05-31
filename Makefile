@@ -6,7 +6,7 @@ VPATH = .:CMSIS:StdPeriph
 
 # Object files
 OBJECTS =	startup_stm32f030.o system_stm32f0xx.o main.o \
-			systick.o adc.o ws281x.o \
+			systick.o adc.o ws281x.o ir.o \
 			stm32f0xx_rcc.o stm32f0xx_gpio.o stm32f0xx_misc.o \
 			stm32f0xx_tim.o stm32f0xx_adc.o stm32f0xx_dma.o
 
