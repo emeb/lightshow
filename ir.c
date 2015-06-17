@@ -95,29 +95,90 @@ uint8_t ir_decode_code(uint32_t code)
 {
     switch (code)
     {
-        case 0xed127f80: return  IR_RM_PWR;
-        case 0xe51a7f80: return  IR_RM_VOLUP;
-        case 0xe11e7f80: return  IR_RM_CHUP;
+        case 0xb24dff00:
+		case 0xed127f80:
+			return  IR_RM_PWR;
+		
+        case 0xe11eff00:
+        case 0xe51a7f80:
+			return  IR_RM_VOLUP;
+		
+        case 0xfa05ff00:
+        case 0xe11e7f80:
+			return  IR_RM_CHUP;
 
-        case 0xfe017f80: return  IR_RM_MUTE;
-        case 0xfd027f80: return  IR_RM_VOLDN;
-        case 0xfc037f80: return  IR_RM_CHDN;
+        case 0xe916ff00:
+        case 0xfe017f80:
+			return  IR_RM_MUTE;
+		
+        case 0xf50aff00:
+        case 0xfd027f80:
+			return  IR_RM_VOLDN;
+		
+        case 0xfd02ff00:
+        case 0xfc037f80:
+			return  IR_RM_CHDN;
 
-        case 0xfb047f80: return  IR_RM_1;
-        case 0xfa057f80: return  IR_RM_2;
-        case 0xf9067f80: return  IR_RM_3;
+        case 0xf609ff00:
+        case 0xfb047f80:
+			return  IR_RM_1;
+		
+        case 0xe21dff00:
+        case 0xfa057f80:
+			return  IR_RM_2;
+		
+        case 0xe01fff00:
+        case 0xf9067f80:
+			return  IR_RM_3;
 
-        case 0xf8077f80: return  IR_RM_4;
-        case 0xf7087f80: return  IR_RM_5;
-        case 0xf6097f80: return  IR_RM_6;
+        case 0xf20dff00:
+        case 0xf8077f80:
+			return  IR_RM_4;
+		
+        case 0xe619ff00:
+        case 0xf7087f80:
+			return  IR_RM_5;
+		
+        case 0xe41bff00:
+        case 0xf6097f80:
+			return  IR_RM_6;
 
-        case 0xf50a7f80: return  IR_RM_7;
-        case 0xe41b7f80: return  IR_RM_8;
-        case 0xe01f7f80: return  IR_RM_9;
+        case 0xee11ff00:
+        case 0xf50a7f80:
+			return  IR_RM_7;
+		
+        case 0xea15ff00:
+        case 0xe41b7f80:
+			return  IR_RM_8;
+		
+        case 0xe817ff00:
+        case 0xe01f7f80:
+			return  IR_RM_9;
 
-        case 0xf30c7f80: return  IR_RM_ZOOM;
-        case 0xf20d7f80: return  IR_RM_0;
-        case 0xf10e7f80: return  IR_RM_JUMP;
+        case 0xf30c7f80:
+			return  IR_RM_ZOOM;
+		
+        case 0xed12ff00:
+        case 0xf20d7f80:
+			return  IR_RM_0;
+		
+        case 0xf10e7f80:
+			return  IR_RM_JUMP;
+        
+        case 0xbf40ff00:
+			return  IR_RM_FULLSCRN;
+			
+        case 0xe31cff00:
+			return  IR_RM_RCL;
+		
+		case 0xb34cff00:
+			return  IR_RM_REC;
+
+		case 0xf30cff00:
+			return  IR_RM_TSHFT;
+		
+		case 0xab54ff00:
+			return  IR_RM_SRC;
         
         default: return IR_RM_IDLE;
     }

@@ -37,6 +37,13 @@
 #define IR_RM_0 62
 #define IR_RM_JUMP 63
 
+/* unique codes for 2nd remote */
+#define IR_RM_FULLSCRN 70
+#define IR_RM_RCL 71
+#define IR_RM_REC 72
+#define IR_RM_TSHFT 73
+#define IR_RM_SRC 74
+
 void ir_init(void);
 uint8_t ir_check_key(void);
 

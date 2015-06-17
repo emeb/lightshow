@@ -59,7 +59,7 @@ int main(void)
 	while(1)
 	{
 		/* get pot parameters if they changed */
-		if(adc_hyst(8))
+		if(adc_hyst(16))
 		{
 			algo = (adc_get_data(0)>>9)&7;	// for 8 modes
 			bright = adc_get_data(1)>>4;
@@ -172,6 +172,9 @@ int main(void)
 				break;
 				
 			case 4:
+			case 5:
+			case 6:
+			case 7:
 				/* two of 5 interpolated, offset by 180, complementary */
 				hsv[1] = 0xff;			// Saturation is max
 				
